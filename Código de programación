@@ -22,10 +22,10 @@ Data: 25 Marzo de 2023
 #include <Servo.h>
 
 // Definicións do sensor HC-SR04
-#define ECHO           9
-#define TRIGGER        8
+#define ECHO           8
+#define TRIGGER        9
 #define DIST_MAX       200
-#define UMBRAL_DIST    12
+#define UMBRAL_DIST    50
 
 //NewPing sonar(TRIGGER, ECHO, DIST_MAX); //Obxecto sensor de distancia para <NewPing.h>
 
@@ -38,6 +38,11 @@ Data: 25 Marzo de 2023
 #define LR       3  // Perna dereita (Right Leg)
 #define FL       4  // Pé esquerdo (Left Foot)
 #define LL       2  // Perna esquerda (Left Leg)
+
+float distancia;
+float velocidad;
+float tiempo;
+
 
 Servo peDer, pernaDer, peEsq, pernaEsp;  
 
@@ -61,65 +66,50 @@ void loop() {
 // Función que indica se o obxecto supera o 
 // umbral (true) ou non (false
 bool demasiadoProximo() {
-  if(distanciaObxecto() < UMBRAL_DIST) zumbar(); 
-  else nonZumbar(); 
-  delay(50);
+  
+  bool mehdi;
+  
+  if(distanciaObxecto() < UMBRAL_DIST) {
+     zumbar(); 
+     mehdi = true;
+  } 
+  
+  else { 
+    nonZumbar();
+    mehdi = false;}
+    delay(50);
+    Serial.println(mehdi);
+    return(mehdi);
 }
+
+
 
 // Función que calcula a distancia ao obxecto en cm
 // Incúe unha espera de 50 ms
 float distanciaObxecto() {
-  long t; 
-  long d;
-  
-  
-  digitalWrite(TRIGGER, HIGH);
-  delay(50);
-  digitalWrite(TRIGGER, LOW);
-  
-  t = pulseIn(ECHO, HIGH);
-  d = t/59;
-  
-  Serial.print("Distancia: ");
-  Serial.print(d);
-  Serial.println();
-  delay(100);
+ 
+           
+    digitalWrite(TRIGGER, HIGH);       // Activamos el pulso de salida
+    delayMicroseconds(10);             // Esperamos 10µs. El pulso sigue active este 
+                                       // tiempo
+    digitalWrite(TRIGGER, LOW);        // Cortamos el pulso y a esperar el ECHO
+    tiempo = pulseIn(ECHO, HIGH) ; 
+    distancia = tiempo/59;   
+    Serial.print("distancia");
+    Serial.println(distancia);
+    Serial.println("cm");
+    return(distancia);
 }
 
 // Función que fai zumbar o zumbador durante 200 ms
 void zumbar() {
-  long t; 
-  long d;
+
+        digitalWrite (BUZZER , HIGH);
   
-  
-  digitalWrite(TRIGGER, HIGH);
-  delay(50);
-  digitalWrite(TRIGGER, LOW);
-  
-  t = pulseIn(ECHO, HIGH);
-  d = t/59;
-  
-  if (d<12) {
-    digitalWrite(BUZZER, HIGH);
-}
 }
 // Función que apaga o zumbador durante 200 ms
 void nonZumbar() {
-   long t; 
-   long d;
-  
-  
-  digitalWrite(TRIGGER, HIGH);
-  delay(50);
-  digitalWrite(TRIGGER, LOW);
-  
-  t = pulseIn(ECHO, HIGH);
-  d = t/59;
-  
-  if (d<12) {
-    digitalWrite(BUZZER, HIGH);
-}
-  else if (d>12) {
-    digitalWrite(BUZZER, LOW);
-}
+   
+        digitalWrite (BUZZER , LOW); 
+   
 }
