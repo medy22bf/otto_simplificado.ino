@@ -14,7 +14,7 @@ O zumbador vai conectado no pin 13 e o sensor de distancia HC-SR04
 nos pins 9 (echo) e 8 (trigger).
 A función loop() vai facendo chamadas a funcións definidas aparte. NON inclúe máis
 código que chamdas a función externas.
-Autor: DAVID ANDRES OTERO ELIA 
+Autor: Mehdi Boumhara Farhane
 Data: 25 Marzo de 2023
 */
 
